@@ -23,6 +23,7 @@ layout: default
 
 ## Selected honors and awards
 
+- Ranked 1st place at the DCASE 2024 Challenge task 6 (automated audio captioning, AAC)- 2024
 - Ranked 1st place at the DCASE 2023 Challenge task 6-a (automated audio captioning, AAC)- 2023
 - Ranked 3rd place at the Third DIHARD Speech Diarisation Challenge (track 1 core, speaker diarization, SD) - 2021
 
