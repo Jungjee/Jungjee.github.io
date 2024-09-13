@@ -26,8 +26,3 @@ nav:
    link: "contact"
 - name: "Software"
    link: "software"
-
-collections:
-  my_subsite:
-    output: true
-    permalink: /titw
