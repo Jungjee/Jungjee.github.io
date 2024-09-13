@@ -30,4 +30,4 @@ nav:
 collections:
   my_subsite:
     output: true
-    permalink: /titw/:path/
+    permalink: /titw
