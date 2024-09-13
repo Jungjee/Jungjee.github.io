@@ -24,3 +24,10 @@ nav:
    link: "https://github.com/Jungjee"
  - name: "Contact"
    link: "contact"
+- name: "Software"
+   link: "software"
+
+collections:
+  my_subsite:
+    output: true
+    permalink: /titw/:path/
