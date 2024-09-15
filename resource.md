@@ -9,4 +9,4 @@ layout: default
 ## Datasets
 
 - [TITW](https://jungjee.github.io/titw)
-- [SpoofCeleb](https://jungjee/github.io/spoofceleb)
+- [SpoofCeleb](https://jungjee.github.io/spoofceleb)
