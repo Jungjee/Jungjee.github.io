@@ -4,9 +4,11 @@ layout: default
 
 ## Professional experience
 
+- Senior Research Scientist at Apple
+  - September 2024 -
 - Postdoctoral research associate at Carnegie Mellon Univerisy
-  - May 2023 - Present
-- Research scientist at Naver Clova.
+  - May 2023 - September 2024
+- Research scientist at Naver Clova
   - December 2020 - April 2023
 
 ## Education
