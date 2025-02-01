@@ -9,7 +9,7 @@ tracking_id: #
 
 footer: yes
 footer_url: "https://jungjee.com"
-footer_text: "Designed by Ankit Sultana, adapted by Jee-weon Jung."
+footer_text: "Design: Ankit Sultana, adaptation: Jee-weon Jung."
 
 sass:
     style: compressed
