@@ -9,7 +9,7 @@ tracking_id: #
 
 footer: yes
 footer_url: "https://jungjee.com"
-footer_text: "Adapted from original design by Ankit Sultana."
+footer_text: "Theme adapted. Original design: Ankit Sultana."
 
 sass:
     style: compressed
