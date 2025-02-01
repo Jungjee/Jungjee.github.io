@@ -1,5 +1,5 @@
 title: Jee-weon Jung
-url: "https://jungjee.github.io"
+url: "https://jungjee.com"
 baseurl: ""
 
 markdown: kramdown
@@ -8,7 +8,7 @@ markdown: kramdown
 tracking_id: #
 
 footer: yes
-footer_url: "https://github.com/ankitsultana"
+footer_url: "https://jungjee.com"
 footer_text: "Designed by Ankit Sultana, adapted by Jee-weon Jung."
 
 sass:
@@ -20,9 +20,9 @@ nav:
    link: "./"
  - name: "CV"
    link: "CV_Jee-weon_Jung.pdf"
- - name: "GitHub"
-   link: "https://github.com/Jungjee"
  - name: "Contact"
    link: "contact"
  - name: "Resource"
    link: "resource"
+- name: "Mentoring"
+   link: "mentoring"
