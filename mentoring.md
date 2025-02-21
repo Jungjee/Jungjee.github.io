@@ -35,6 +35,13 @@ I’m always excited to mentor new individuals. Feel free to reach out via e-mai
 </details>
 
 <details>
+<summary>Alex Gichamba (2024 - current) <a href="https://scholar.google.com/citations?hl=ko&authuser=1&user=DlPd0kwAAAAJ">[Link]</a></summary>
+<ul>
+  <li>Topic: Spoofing-robust automatic speaker verification</li>
+</ul>
+</details>
+
+<details>
 <summary>Masao Someki (2025 - current) <a href="https://masao-someki.github.io">[Link]</a></summary>
 <ul>
   <li>Topic: Dynamic pruning of LLMs</li>
