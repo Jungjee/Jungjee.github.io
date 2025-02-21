@@ -10,10 +10,14 @@ I’m always excited to mentor new individuals. Feel free to reach out via e-mai
 ## Ongoing
 <details>
 <summary>KiHyun Nam (2023 - current) <a href="https://devkihyun.github.io/about/">[Link]</a></summary>
-  - Topic: Robust automatic speaker verification.
-  - Outcome
-    - Kihyun Nam, Hee-Soo Heo, <b>Jee-weon Jung</b>, Joon Son Chung, “Disentangled Representation Learning for Environment-agnostic Speaker Recognition,” in Proc. Interspeech, 2024.
-    - Kihyun Nam, Youkyum Kim, Jaesung Huh, Hee Soo Heo, <b>Jee-weon Jung</b>, Joon Son Chung, “Disentangled representation learning for multilingual speaker recognition,” in Proc. Interspeech, 2023.
+<ul>
+  <li>Topic: Robust automatic speaker verification.</li>
+  <li>Outcome
+    <ul>
+      <li>Kihyun Nam, Hee-Soo Heo, <b>Jee-weon Jung</b>, Joon Son Chung, “Disentangled Representation Learning for Environment-agnostic Speaker Recognition,” in Proc. Interspeech, 2024.</li>
+      <li>Kihyun Nam, Youkyum Kim, Jaesung Huh, Hee Soo Heo, <b>Jee-weon Jung</b>, Joon Son Chung, “Disentangled representation learning for multilingual speaker recognition,” in Proc. Interspeech, 2023.</li>
+  </li>
+</ul>
 </details>
 
 <details>
