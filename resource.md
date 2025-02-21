@@ -3,12 +3,13 @@ layout: default
 ---
 
 ## Challenge & workshop organizations
-- [SASV 2022](https://sasv-challenge.github.io/)
-- [ASVspoof 5](https://www.asvspoof.org/workshop2024)
+- SASV 2022: [challenge](https://sasv-challenge.github.io/)
+- VoxSRC 2022: [challenge](https://mm.kaist.ac.kr/datasets/voxceleb/voxsrc/competition2022.html), [workshop](https://mm.kaist.ac.kr/datasets/voxceleb/voxsrc/interspeech2022.html)
+- VoxSRC 2023: [challenge](https://mm.kaist.ac.kr/datasets/voxceleb/voxsrc/competition2023.html), [workshop](https://mm.kaist.ac.kr/datasets/voxceleb/voxsrc/interspeech2023.html)
+- ASVspoof 5: [workshop](https://www.asvspoof.org/workshop2024)
 
 ## Datasets
 
-- [TITW](https://jungjee.com/titw) (HuggingFace Mirror)
-- [SpoofCeleb](https://jungjee.com/spoofceleb) (HuggingFace Mirror)
-- [ASVspoof 5](https://huggingface.co/datasets/jungjee/asvspoof5) (HuggingFace Mirror)
-- [ASVspoof 5](https://zenodo.org/records/14498691) (Zenodo Mirror)
+- TITW ([HuggingFace Mirror](https://scholar.google.com/citations?hl=ko&authuser=1&user=DlPd0kwAAAAJ))
+- SpoofCeleb ([HuggingFace Mirror](https://scholar.google.com/citations?hl=ko&authuser=1&user=DlPd0kwAAAAJ))
+- ASVspoof 5 ([HuggingFace Mirror](https://huggingface.co/datasets/jungjee/asvspoof5), [Zenodo Mirror](https://zenodo.org/records/14498691))
