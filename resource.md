@@ -10,6 +10,6 @@ layout: default
 
 ## Datasets
 
-- TITW ([HuggingFace Mirror](https://scholar.google.com/citations?hl=ko&authuser=1&user=DlPd0kwAAAAJ))
-- SpoofCeleb ([HuggingFace Mirror](https://scholar.google.com/citations?hl=ko&authuser=1&user=DlPd0kwAAAAJ))
-- ASVspoof 5 ([HuggingFace Mirror](https://huggingface.co/datasets/jungjee/asvspoof5), [Zenodo Mirror](https://zenodo.org/records/14498691))
+- TITW: [HuggingFace Mirror](https://huggingface.co/datasets/jungjee/titw)
+- SpoofCeleb: [HuggingFace Mirror](https://huggingface.co/datasets/jungjee/spoofceleb)
+- ASVspoof 5: [HuggingFace Mirror](https://huggingface.co/datasets/jungjee/asvspoof5), [Zenodo Mirror](https://zenodo.org/records/14498691)
