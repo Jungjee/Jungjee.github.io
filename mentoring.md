@@ -3,7 +3,7 @@ layout: default
 ---
 
 Over the years, I’ve had the privilege of working with extremely talented students, fostering their growth as researchers and scholars. This page lists our collaborations, which have resulted in impactful academic publications across divserse speech processing tasks.
-.
+
 ## Announcement
 I’m always excited to mentor new individuals. Feel free to reach out via e-mail if you’re interested in exploring a collaboration!
 
