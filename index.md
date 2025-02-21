@@ -2,6 +2,9 @@
 layout: default
 ---
 
+## Welcome :)
+Welcome to my website. I'm Jee-weon Jung, a Senior Research Scientist at Apple, dedicated to advancing speech processing and machine learning. My expertise lies in audio anti-spoofing and speaker recognition, areas that are vital for the security and reliability of speech technologies, and many more. With a PhD from University of Seoul, conducting research at Naver Corporation, and postdoc experience at Carnegie Mellon University, I've had the privilege of working on cutting-edge research projects. My work has been honored with first-place awards in international challenges, and I've published over 90 papers in leading academic journals and conferences. I invite you to explore my [CV](https://www.jungjee.com/CV_Jee-weon_Jung.pdf) to gain a deeper understanding of my contributions to the field
+
 ## Professional experience
 
 - Senior Research Scientist at Apple
