@@ -8,6 +8,7 @@ layout: default
 
 ## Datasets
 
-- [TITW](https://jungjee.github.io/titw) (HuggingFace Mirror)
-- [SpoofCeleb](https://jungjee.github.io/spoofceleb) (HuggingFace Mirror)
+- [TITW](https://jungjee.com/titw) (HuggingFace Mirror)
+- [SpoofCeleb](https://jungjee.com/spoofceleb) (HuggingFace Mirror)
+- [ASVspoof 5](https://huggingface.co/datasets/jungjee/asvspoof5) (HuggingFace Mirror)
 - [ASVspoof 5](https://zenodo.org/records/14498691) (Zenodo Mirror)
