@@ -20,48 +20,61 @@ function MenteeEntry({ mentee }: { mentee: Mentee }) {
     : `${mentee.startYear} – present`;
 
   return (
-    <li className="border-b border-gray-100 last:border-0">
+    <div className="card">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full text-left py-3 flex items-baseline justify-between gap-4 hover:bg-gray-50 -mx-2 px-2 rounded transition-colors"
+        className="w-full text-left flex items-start justify-between gap-4"
         aria-expanded={isOpen}
       >
-        <span>
-          <a
-            href={mentee.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="font-medium"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {mentee.name}
-          </a>
-          <span className="text-secondary text-sm"> ({period})</span>
-        </span>
-        <span className="text-secondary text-sm shrink-0">
-          {isOpen ? "▾" : "▸"}
-        </span>
-      </button>
-      {isOpen && (
-        <div className="pb-4 pl-2 space-y-2">
-          <p className="text-sm text-secondary">
-            <span className="font-medium">Topic:</span> {mentee.topic}
-          </p>
-          {mentee.outcomes.length > 0 && (
-            <div>
-              <p className="text-sm font-medium text-secondary mb-1">Publications:</p>
-              <ul className="space-y-1">
-                {mentee.outcomes.map((outcome, i) => (
-                  <li key={i} className="text-sm text-secondary leading-relaxed">
-                    {outcome}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
+        <div className="flex items-start gap-3">
+          {/* Avatar placeholder */}
+          <div className="w-9 h-9 rounded-full bg-surface flex items-center justify-center text-xs font-semibold text-secondary flex-shrink-0 mt-0.5">
+            {mentee.name.split(" ").map(n => n[0]).join("")}
+          </div>
+          <div>
+            <a
+              href={mentee.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-sm font-medium hover:text-accent transition-colors"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {mentee.name}
+            </a>
+            <p className="text-xs text-secondary mt-0.5">{mentee.topic}</p>
+          </div>
         </div>
-      )}
-    </li>
+        <div className="flex items-center gap-2 flex-shrink-0">
+          <span className="text-xs text-secondary font-mono">{period}</span>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 16 16"
+            fill="currentColor"
+            className={`w-4 h-4 text-secondary transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`}
+          >
+            <path fillRule="evenodd" d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clipRule="evenodd" />
+          </svg>
+        </div>
+      </button>
+      <div
+        className={`overflow-hidden transition-all duration-200 ${
+          isOpen ? "max-h-[500px] opacity-100 mt-3 pt-3 border-t border-border-light" : "max-h-0 opacity-0"
+        }`}
+      >
+        {mentee.outcomes.length > 0 && (
+          <div className="pl-12">
+            <p className="text-xs font-medium text-secondary uppercase tracking-wide mb-2">Publications</p>
+            <ul className="space-y-2">
+              {mentee.outcomes.map((outcome, i) => (
+                <li key={i} className="text-xs text-secondary leading-relaxed pl-3 border-l-2 border-border-light">
+                  {outcome}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </div>
+    </div>
   );
 }
 
@@ -71,25 +84,38 @@ export default function MentoringSection() {
 
   return (
     <section>
-      <h2 className="text-lg font-semibold mb-2">Mentoring</h2>
+      <h2 className="section-heading">Mentoring</h2>
       <p className="text-sm text-secondary mb-6">
-        I&apos;m always excited to mentor new individuals. Feel free to reach out
-        via e-mail if you&apos;re interested in exploring a collaboration!
+        I&apos;m always excited to mentor new individuals. Feel free to{" "}
+        <a href="mailto:jeeweonj@ieee.org">reach out</a> if you&apos;re interested
+        in exploring a collaboration!
       </p>
 
-      <h3 className="text-base font-medium mb-2">Ongoing</h3>
-      <ul className="mb-8">
-        {ongoing.map((mentee) => (
-          <MenteeEntry key={mentee.name} mentee={mentee} />
-        ))}
-      </ul>
+      <div className="space-y-6">
+        <div>
+          <div className="flex items-center gap-2 mb-3">
+            <h3 className="text-sm font-semibold">Ongoing</h3>
+            <span className="badge">{ongoing.length}</span>
+          </div>
+          <div className="space-y-3">
+            {ongoing.map((mentee) => (
+              <MenteeEntry key={mentee.name} mentee={mentee} />
+            ))}
+          </div>
+        </div>
 
-      <h3 className="text-base font-medium mb-2">Previous</h3>
-      <ul>
-        {previous.map((mentee) => (
-          <MenteeEntry key={mentee.name} mentee={mentee} />
-        ))}
-      </ul>
+        <div>
+          <div className="flex items-center gap-2 mb-3">
+            <h3 className="text-sm font-semibold">Previous</h3>
+            <span className="badge badge-muted">{previous.length}</span>
+          </div>
+          <div className="space-y-3">
+            {previous.map((mentee) => (
+              <MenteeEntry key={mentee.name} mentee={mentee} />
+            ))}
+          </div>
+        </div>
+      </div>
     </section>
   );
 }
