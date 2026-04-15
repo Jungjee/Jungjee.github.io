@@ -27,12 +27,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="bg-white antialiased font-sans">
-        <div className="mx-auto max-w-[680px] px-6">
-          <Header />
+      <body className="antialiased font-sans">
+        <Header />
+        <div className="mx-auto max-w-[780px] px-6 pt-6 pb-12">
           <main>{children}</main>
-          <Footer />
         </div>
+        <Footer />
       </body>
     </html>
   );
