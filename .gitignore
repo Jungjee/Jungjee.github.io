@@ -21,3 +21,9 @@ next-env.d.ts
 
 # superpowers brainstorm sessions
 .superpowers/
+
+# local scratch / reference files (not part of the site)
+default.profraw
+karpathy.ai
+ref-karpathy-style.css
+/jeeweon.png
