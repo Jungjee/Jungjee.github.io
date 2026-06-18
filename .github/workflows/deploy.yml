@@ -24,8 +24,11 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           cache: npm
+
+      - name: Pin npm (runner-bundled npm crashes with "Exit handler never called")
+        run: npm install -g npm@11
 
       - name: Install dependencies
         run: npm ci
