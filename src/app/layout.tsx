@@ -27,11 +27,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="antialiased font-sans">
+      <body className="antialiased font-sans bg-white">
         <Header />
-        <div className="mx-auto max-w-[780px] px-6 pt-6 pb-12">
-          <main>{children}</main>
-        </div>
+        <main>{children}</main>
         <Footer />
       </body>
     </html>
