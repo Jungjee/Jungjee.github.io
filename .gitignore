@@ -1,29 +1,5 @@
-# dependencies
-node_modules/
-
-# next.js
-.next/
-out/
-
-# misc
+_site
+.sass-cache
+.sass-cache/
 .DS_Store
-*.pem
-
-# debug
-npm-debug.log*
-
-# env
-.env*.local
-
-# typescript
-*.tsbuildinfo
-next-env.d.ts
-
-# superpowers brainstorm sessions
-.superpowers/
-
-# local scratch / reference files (not part of the site)
-default.profraw
-karpathy.ai
-ref-karpathy-style.css
-/jeeweon.png
+.jekyll-cache
