@@ -211,9 +211,42 @@
     :root:not([data-theme="light"]) .toggle .lbl-light{display:none}
   }
   @media (prefers-reduced-motion:reduce){.jr,.toggle{transition:none}}
+
+  /* smooth in-page scrolling + anchor offset */
+  html{scroll-behavior:smooth}
+  @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+  section{scroll-margin-top:84px}
+
+  /* right-edge section navigator (wide screens) */
+  .sidenav{position:fixed;top:50%;right:20px;transform:translateY(-50%);z-index:30;
+    display:none;flex-direction:column;gap:5px;align-items:flex-end}
+  @media(min-width:1080px){.sidenav{display:flex}}
+  .sidenav a{display:flex;align-items:center;justify-content:flex-end;gap:10px;padding:4px 0;text-decoration:none;cursor:pointer}
+  .sidenav .txt{opacity:0;transform:translateX(6px);transition:opacity .2s,transform .2s;
+    font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-2);
+    background:var(--paper-2);border:1px solid var(--rule);padding:3px 9px;border-radius:6px;white-space:nowrap}
+  .sidenav .tick{width:16px;height:2px;border-radius:2px;background:var(--ink-3);opacity:.55;flex:none;
+    transition:width .2s,background .2s,opacity .2s}
+  .sidenav a:hover .txt{opacity:1;transform:none}
+  .sidenav a:hover .tick{background:var(--accent);width:26px;opacity:1}
+  .sidenav a.active .tick{background:var(--accent);width:30px;opacity:1}
+
+  /* sticky top nav where the side navigator is hidden */
+  @media(max-width:1079px){
+    .topnav{position:sticky;top:0;z-index:25;background:var(--paper)}
+  }
 </style>
 
 <div class="jr">
+  <nav class="sidenav" aria-label="Jump to section">
+    <a href="#top"><span class="txt">Top</span><span class="tick"></span></a>
+    <a href="#exp"><span class="txt">Experience</span><span class="tick"></span></a>
+    <a href="#awards"><span class="txt">Honors</span><span class="tick"></span></a>
+    <a href="#pubs"><span class="txt">Publications</span><span class="tick"></span></a>
+    <a href="#mentoring"><span class="txt">Mentoring</span><span class="tick"></span></a>
+    <a href="#resources"><span class="txt">Resources</span><span class="tick"></span></a>
+    <a href="#contact"><span class="txt">Contact</span><span class="tick"></span></a>
+  </nav>
   <div class="wrap">
     <div class="mast">
       <div class="name">Jee-weon <span>Jung</span></div>
@@ -233,9 +266,9 @@
       </button>
     </nav>
 
-    <div class="lead">
+    <div class="lead" id="top">
       <div>
-        <p class="drop">For <b>over a decade</b> I've worked on making speech technology trustworthy: detecting <b>speech deepfakes</b>, verifying <b>who is really speaking</b>, and <b>who is speaking when</b>. My teams have taken <b>first place in international challenges</b>, and my research spans industry and academia — Naver Clova, a postdoc at <b>Carnegie Mellon</b>, and now Senior Research Scientist at <b>Apple</b>. Today I'm increasingly focused on building <b>speech LLMs</b> to be personalized and to understand <b>paralinguistics</b>.</p>
+        <p class="drop">For <b>over a decade</b> I've worked on making speech technology trustworthy: detecting <b>speech deepfakes</b>, verifying <b>who is really speaking</b>, and tracking <b>who spoke when</b>. My teams have taken <b>first place in international challenges</b>, and my research spans industry and academia — Naver Clova, a postdoc at <b>Carnegie Mellon</b>, and now Senior Research Scientist at <b>Apple</b>. Today I'm increasingly focused on building <b>speech LLMs</b> to be personalized and to understand <b>paralinguistics</b>.</p>
         <div class="cta-row" style="margin-top:28px">
           <a class="btn solid" href="CV_Jee-weon_Jung.pdf">Read the CV</a>
           <a class="btn line" href="https://scholar.google.com/citations?user=A5OcLdAAAAAJ">Google Scholar</a>
@@ -389,6 +422,20 @@
   });
   // set initial glyph to match resolved theme
   btn.querySelector('.ic').textContent = current()==='dark' ? '☀' : '☾';
+})();
+</script>
+
+<script>
+/* Scroll-spy: highlight the current section in the side navigator. */
+(function(){
+  var links=[].slice.call(document.querySelectorAll('.sidenav a'));
+  if(!links.length||!('IntersectionObserver' in window))return;
+  function setActive(id){links.forEach(function(a){a.classList.toggle('active',a.getAttribute('href')==='#'+id);});}
+  var targets=links.map(function(a){return document.getElementById(a.getAttribute('href').slice(1));}).filter(Boolean);
+  var io=new IntersectionObserver(function(entries){
+    entries.forEach(function(e){if(e.isIntersecting)setActive(e.target.id);});
+  },{rootMargin:'-45% 0px -50% 0px',threshold:0});
+  targets.forEach(function(t){io.observe(t);});
 })();
 </script>
 
