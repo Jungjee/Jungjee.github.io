@@ -1,0 +1,173 @@
+<style>
+  /* ============ V3 — "PLAINTEXT" : Karpathy-inspired minimal, dual theme ============ */
+  :root{
+    --bg:#ffffff;
+    --fg:#242220;
+    --fg-2:#5c5854;
+    --fg-3:#918b84;
+    --rule:#e8e4dd;
+    --accent:#b5502f;      /* muted rust link */
+    --accent-h:#8f3c22;
+    --tag:#f4f1ea;
+    --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,ui-serif,serif;
+    --sans:-apple-system,"SF Pro Text","Helvetica Neue",Helvetica,Arial,sans-serif;
+    --mono:ui-monospace,"SF Mono",Menlo,monospace;
+  }
+  @media (prefers-color-scheme:dark){
+    :root{--bg:#16151300;--bg:#171614;--fg:#e9e5df;--fg-2:#b0aaa1;--fg-3:#7c766d;
+      --rule:#2b2926;--accent:#e0895f;--accent-h:#f0a37e;--tag:#232120;}
+  }
+  :root[data-theme="light"]{--bg:#ffffff;--fg:#242220;--fg-2:#5c5854;--fg-3:#918b84;--rule:#e8e4dd;--accent:#b5502f;--accent-h:#8f3c22;--tag:#f4f1ea;}
+  :root[data-theme="dark"]{--bg:#171614;--fg:#e9e5df;--fg-2:#b0aaa1;--fg-3:#7c766d;--rule:#2b2926;--accent:#e0895f;--accent-h:#f0a37e;--tag:#232120;}
+  *{box-sizing:border-box}
+  body{margin:0}
+  .pt{background:var(--bg);color:var(--fg);font-family:var(--sans);font-size:16.5px;line-height:1.6;
+    -webkit-font-smoothing:antialiased;transition:background .3s,color .3s}
+  .container{max-width:760px;margin:0 auto;padding:0 24px}
+  a{color:var(--accent);text-decoration:none}
+  a:hover{color:var(--accent-h);text-decoration:underline}
+
+  /* header */
+  .head{display:grid;grid-template-columns:150px 1fr;gap:34px;align-items:center;padding:56px 0 40px}
+  @media(max-width:560px){.head{grid-template-columns:1fr;text-align:center;gap:20px;padding-top:40px}}
+  .head img{width:150px;height:150px;border-radius:50%;object-fit:cover;justify-self:center;
+    border:1px solid var(--rule);background:var(--tag)}
+  .head h1{font-family:var(--serif);font-size:34px;font-weight:600;margin:0;letter-spacing:-.01em}
+  .head .role{color:var(--fg-2);font-size:17px;margin:6px 0 0}
+  .head .role b{color:var(--fg);font-weight:600}
+  .head .tags{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+  @media(max-width:560px){.head .tags{justify-content:center}}
+  .tagchip{font-family:var(--mono);font-size:11.5px;color:var(--fg-2);background:var(--tag);
+    padding:4px 10px;border-radius:20px;letter-spacing:.02em}
+  .head .quick{margin-top:16px;font-size:14.5px}
+  .head .quick a{margin-right:16px}
+
+  /* prose */
+  .lede{font-size:18px;color:var(--fg);margin:0 0 8px}
+  section{padding:26px 0;border-top:1px solid var(--rule)}
+  h2.sec{font-family:var(--mono);font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--fg-3);
+    font-weight:600;margin:0 0 20px}
+  p{margin:0 0 14px}
+
+  /* list rows */
+  .list{display:flex;flex-direction:column}
+  .li{display:grid;grid-template-columns:1fr auto;gap:16px;padding:11px 0;align-items:baseline;border-bottom:1px dashed var(--rule)}
+  .li:last-child{border-bottom:none}
+  .li .main{font-size:16.5px}
+  .li .main b{font-weight:600}
+  .li .main .at{color:var(--fg-2)}
+  .li .date{font-family:var(--mono);font-size:12.5px;color:var(--fg-3);white-space:nowrap;font-variant-numeric:tabular-nums}
+
+  /* awards */
+  .aw{display:grid;grid-template-columns:auto 1fr auto;gap:14px;align-items:baseline;padding:10px 0;border-bottom:1px dashed var(--rule)}
+  .aw .p{font-family:var(--mono);font-size:12px;font-weight:600;color:var(--accent);white-space:nowrap}
+  .aw .d{font-size:16px}.aw .d b{font-weight:600}
+  .aw .y{font-family:var(--mono);font-size:12.5px;color:var(--fg-3)}
+
+  /* pubs */
+  .pubs{counter-reset:p;list-style:none;margin:0;padding:0}
+  .pubs li{counter-increment:p;position:relative;padding:12px 0 12px 34px;border-bottom:1px dashed var(--rule)}
+  .pubs li::before{content:counter(p);position:absolute;left:0;top:14px;font-family:var(--mono);font-size:12px;color:var(--fg-3)}
+  .pubs .t{font-weight:600;font-size:16px;line-height:1.42}
+  .pubs .m{color:var(--fg-2);font-size:14px;margin-top:2px}
+  .pubs .m em{font-style:italic;color:var(--fg-2)}
+  .pubs .m .v{font-family:var(--mono);font-size:12px;color:var(--fg-3);text-transform:uppercase;letter-spacing:.04em}
+
+  footer{border-top:1px solid var(--rule);margin-top:20px;padding:28px 0 56px;color:var(--fg-3);font-size:13.5px;
+    display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
+  footer a{color:var(--fg-3)}
+
+  .toggle{position:fixed;top:18px;right:18px;font-family:var(--mono);font-size:12px;color:var(--fg-2);
+    background:var(--tag);border:1px solid var(--rule);border-radius:20px;padding:7px 14px;cursor:pointer;z-index:30}
+  .toggle:hover{color:var(--fg)}
+</style>
+
+<div class="pt">
+  <button class="toggle" id="tg" aria-label="Toggle theme">◐ theme</button>
+  <div class="container">
+
+    <header class="head">
+      <img src="../jeeweon.png" alt="Jee-weon Jung" onerror="this.style.visibility='hidden'">
+      <div>
+        <h1>Jee-weon Jung</h1>
+        <p class="role"><b>Senior Research Scientist</b> at Apple · speech &amp; machine learning</p>
+        <div class="tags">
+          <span class="tagchip">audio anti-spoofing</span>
+          <span class="tagchip">speaker recognition</span>
+          <span class="tagchip">deep learning</span>
+        </div>
+        <div class="quick">
+          <a href="https://www.jungjee.com/CV_Jee-weon_Jung.pdf">CV (PDF)</a>
+          <a href="https://scholar.google.com/citations?user=A5OcLdAAAAAJ">Scholar</a>
+          <a href="https://github.com/Jungjee">GitHub</a>
+          <a href="mailto:jeeweonj@ieee.org">Email</a>
+        </div>
+      </div>
+    </header>
+
+    <section style="border-top:none;padding-top:0">
+      <p class="lede">Hi, I'm Jee-weon. I work on the security and reliability of speech technology — mainly <b>audio anti-spoofing</b> and <b>speaker recognition</b>.</p>
+      <p style="color:var(--fg-2)">I did my PhD in Computer Science at the University of Seoul, was a research scientist at Naver Clova, and a postdoc at Carnegie Mellon before joining Apple. I've published 90+ papers and my teams have taken first place in several international challenges. The short version lives here; the long version is in my <a href="https://www.jungjee.com/CV_Jee-weon_Jung.pdf">CV</a>.</p>
+    </section>
+
+    <section>
+      <h2 class="sec">Experience</h2>
+      <div class="list">
+        <div class="li"><div class="main"><b>Senior Research Scientist</b> <span class="at">· Apple</span></div><div class="date">2024 — now</div></div>
+        <div class="li"><div class="main"><b>Postdoctoral Research Associate</b> <span class="at">· Carnegie Mellon University</span></div><div class="date">2023 — 2024</div></div>
+        <div class="li"><div class="main"><b>Research Scientist</b> <span class="at">· Naver Clova</span></div><div class="date">2020 — 2023</div></div>
+      </div>
+    </section>
+
+    <section>
+      <h2 class="sec">Education</h2>
+      <div class="list">
+        <div class="li"><div class="main"><b>PhD</b>, Computer Science &amp; Engineering <span class="at">· University of Seoul</span></div><div class="date">2017 — 2021</div></div>
+        <div class="li"><div class="main"><b>BS</b>, Computer Science &amp; Engineering <span class="at">· University of Seoul</span></div><div class="date">2013 — 2017</div></div>
+        <div class="li"><div class="main"><b>BBA</b>, Business Administration <span class="at">· University of Seoul</span></div><div class="date">2013 — 2017</div></div>
+      </div>
+    </section>
+
+    <section>
+      <h2 class="sec">Selected honors</h2>
+      <div class="aw"><span class="p">1st</span><span class="d"><b>DCASE 2024</b> Challenge, Task 6 — automated audio captioning</span><span class="y">2024</span></div>
+      <div class="aw"><span class="p">1st</span><span class="d"><b>DCASE 2023</b> Challenge, Task 6-a — automated audio captioning</span><span class="y">2023</span></div>
+      <div class="aw"><span class="p">3rd</span><span class="d"><b>Third DIHARD</b> Challenge, Track 1 core — speaker diarization</span><span class="y">2021</span></div>
+    </section>
+
+    <section>
+      <h2 class="sec">Selected publications</h2>
+      <ol class="pubs">
+        <li><div class="t">AASIST: Audio anti-spoofing using integrated spectro-temporal graph attention networks</div><div class="m"><em>J. Jung</em>, H. Heo, H. Tak, H. Shim, J. S. Chung, B. Lee, H. Yu, N. Evans — <span class="v">ICASSP 2022</span></div></li>
+        <li><div class="t">RawNet: End-to-end deep neural network using raw waveforms for text-independent speaker verification</div><div class="m"><em>J. Jung</em>, H. Heo, J. Kim, H. Shim, H. Yu — <span class="v">INTERSPEECH 2019</span></div></li>
+        <li><div class="t">SASV 2022: The First Spoofing-Aware Speaker Verification Challenge</div><div class="m"><em>J. Jung</em> et al. — <span class="v">INTERSPEECH 2022</span></div></li>
+        <li><div class="t">Knowledge Distillation in Acoustic Scene Classification</div><div class="m"><em>J. Jung</em>, H. Heo, H. Shim, H. Yu — <span class="v">IEEE Access</span></div></li>
+        <li><div class="t">Graph Attention Networks for Speaker Verification</div><div class="m"><em>J. Jung</em>, H. Heo, H. Yu, J. S. Chung — <span class="v">ICASSP 2021</span></div></li>
+      </ol>
+      <p style="color:var(--fg-3);font-size:13.5px;margin-top:16px">Full list (90+) in the <a href="https://www.jungjee.com/CV_Jee-weon_Jung.pdf">CV</a>.</p>
+    </section>
+
+    <section>
+      <h2 class="sec">Contact</h2>
+      <p style="color:var(--fg-2)">Reach me at <a href="mailto:jeeweonj@ieee.org">jeeweonj@ieee.org</a>. Also on
+        <a href="https://scholar.google.com/citations?user=A5OcLdAAAAAJ">Google Scholar</a>,
+        <a href="https://www.researchgate.net/profile/Jee-Weon-Jung-2">ResearchGate</a>,
+        <a href="https://www.linkedin.com/in/jee-weon-jung-6b125bba/">LinkedIn</a>, and
+        <a href="https://github.com/Jungjee">GitHub</a>.</p>
+    </section>
+
+    <footer><span>© 2026 Jee-weon Jung</span><span>jungjee.com</span></footer>
+  </div>
+</div>
+
+<script>
+(function(){
+  var b=document.getElementById('tg');if(!b)return;
+  b.addEventListener('click',function(){
+    var r=document.documentElement;
+    var cur=r.getAttribute('data-theme');
+    if(!cur){cur=window.matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light';}
+    r.setAttribute('data-theme',cur==='dark'?'light':'dark');
+  });
+})();
+</script>
