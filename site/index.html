@@ -24,6 +24,7 @@
        A manual toggle overrides for the current tab session; a fresh visit
        always follows the clock. Runs synchronously to avoid a theme flash. */
     (function(){try{
+      document.documentElement.classList.add('js');
       var pick = sessionStorage.getItem('theme');
       if(!pick){ var h = new Date().getHours(); pick = (h >= 7 && h < 19) ? 'light' : 'dark'; }
       document.documentElement.setAttribute('data-theme', pick);
@@ -235,6 +236,44 @@
   @media(max-width:1079px){
     .topnav{position:sticky;top:0;z-index:25;background:var(--paper)}
   }
+
+  /* research pillars */
+  .pillars{display:grid;grid-template-columns:repeat(3,1fr);gap:28px;margin:6px 0 40px}
+  @media(max-width:720px){.pillars{grid-template-columns:1fr;gap:20px}}
+  .pillar{border-top:2px solid var(--accent);padding-top:13px}
+  .pillar h3{margin:0 0 6px;font-size:19px;font-weight:600;letter-spacing:-.01em}
+  .pillar p{margin:0;font-family:var(--sans);font-size:14.5px;line-height:1.55;color:var(--ink-2)}
+
+  /* metrics band */
+  .metrics{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);margin:0 0 8px}
+  .metric{padding:24px 10px 20px;border-left:1px solid var(--rule)}
+  .metric:first-child{border-left:none;padding-left:2px}
+  .mv{display:block;font-size:clamp(30px,4.6vw,42px);font-weight:600;letter-spacing:-.02em;line-height:1;font-variant-numeric:tabular-nums}
+  .ml{display:block;margin-top:9px;font-family:var(--mono);font-size:11px;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-3)}
+  @media(max-width:720px){
+    .metrics{grid-template-columns:repeat(2,1fr)}
+    .metric:nth-child(odd){border-left:none;padding-left:2px}
+    .metric:nth-child(3),.metric:nth-child(4){border-top:1px solid var(--rule)}
+  }
+
+  /* entrance reveals (only when motion is welcome AND JS is present) */
+  @media (prefers-reduced-motion: no-preference){
+    .js .lead, .js section{opacity:0;transform:translateY(16px);transition:opacity .6s ease,transform .6s ease}
+    .js .lead.in, .js section.in{opacity:1;transform:none}
+    .js .pillars > .pillar, .js .metrics > .metric, .js .bib > li{opacity:0;transform:translateY(14px);transition:opacity .5s ease,transform .5s ease}
+    .js .pillars.in > .pillar, .js .metrics.in > .metric, .js .bib.in > li{opacity:1;transform:none}
+    .js .pillars.in > .pillar:nth-child(2){transition-delay:.09s}
+    .js .pillars.in > .pillar:nth-child(3){transition-delay:.18s}
+    .js .metrics.in > .metric:nth-child(2){transition-delay:.08s}
+    .js .metrics.in > .metric:nth-child(3){transition-delay:.16s}
+    .js .metrics.in > .metric:nth-child(4){transition-delay:.24s}
+    .js .bib.in > li:nth-child(n+2){transition-delay:.06s}
+    .js .bib.in > li:nth-child(n+3){transition-delay:.12s}
+    .js .bib.in > li:nth-child(n+4){transition-delay:.18s}
+    .js .bib.in > li:nth-child(n+5){transition-delay:.24s}
+    .js .bib.in > li:nth-child(n+6){transition-delay:.30s}
+    .js .bib.in > li:nth-child(n+7){transition-delay:.36s}
+  }
 </style>
 
 <div class="jr">
@@ -283,6 +322,19 @@
         <p><strong>Community —</strong> co-organizer of the SASV, VoxSRC, ASVspoof 5 &amp; WildSpoof challenges.</p>
         <p><a href="mailto:jeeweonj@ieee.org">jeeweonj@ieee.org</a></p>
       </div>
+    </div>
+
+    <div class="pillars">
+      <div class="pillar"><h3>Trustworthy speech</h3><p>Detecting speech deepfakes and verifying who is really speaking, so voice interfaces can be trusted.</p></div>
+      <div class="pillar"><h3>Understanding conversations</h3><p>Knowing who spoke when, and making sense of multi-speaker audio.</p></div>
+      <div class="pillar"><h3>Speech LLMs</h3><p>Personalized spoken-language models that understand paralinguistics.</p></div>
+    </div>
+
+    <div class="metrics" aria-label="Research impact at a glance">
+      <div class="metric"><span class="mv" data-count="90" data-suffix="+">90+</span><span class="ml">Publications</span></div>
+      <div class="metric"><span class="mv" data-count="5000" data-suffix="+">5,000+</span><span class="ml">Citations</span></div>
+      <div class="metric"><span class="mv" data-count="31">31</span><span class="ml">h-index</span></div>
+      <div class="metric"><span class="mv" data-count="66">66</span><span class="ml">i10-index</span></div>
     </div>
 
     <section id="exp">
@@ -436,6 +488,35 @@
     entries.forEach(function(e){if(e.isIntersecting)setActive(e.target.id);});
   },{rootMargin:'-45% 0px -50% 0px',threshold:0});
   targets.forEach(function(t){io.observe(t);});
+})();
+</script>
+
+<script>
+/* Entrance reveals + metric count-up */
+(function(){
+  var els=[].slice.call(document.querySelectorAll('.lead, section, .pillars, .metrics, .bib'));
+  var reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function fmt(n){return n.toLocaleString('en-US');}
+  function countUp(el){
+    var target=+el.getAttribute('data-count'),suf=el.getAttribute('data-suffix')||'';
+    if(reduce){el.textContent=fmt(target)+suf;return;}
+    var dur=1100,t0=null;
+    function step(ts){if(!t0)t0=ts;var p=Math.min((ts-t0)/dur,1);var e=1-Math.pow(1-p,3);
+      el.textContent=fmt(Math.round(target*e))+suf;if(p<1)requestAnimationFrame(step);}
+    requestAnimationFrame(step);
+  }
+  var mvs=[].slice.call(document.querySelectorAll('.mv[data-count]'));
+  if(!reduce){mvs.forEach(function(el){el.textContent='0'+(el.getAttribute('data-suffix')||'');});}
+  if(!('IntersectionObserver' in window)){els.forEach(function(e){e.classList.add('in');});mvs.forEach(countUp);return;}
+  var io=new IntersectionObserver(function(entries){
+    entries.forEach(function(en){
+      if(!en.isIntersecting)return;
+      en.target.classList.add('in');
+      if(en.target.classList.contains('metrics')){en.target.querySelectorAll('.mv[data-count]').forEach(countUp);}
+      io.unobserve(en.target);
+    });
+  },{rootMargin:'0px 0px -8% 0px',threshold:.12});
+  els.forEach(function(e){io.observe(e);});
 })();
 </script>
 
