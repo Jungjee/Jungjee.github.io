@@ -39,7 +39,9 @@ npx wrangler pages deploy site --project-name=jungjee --branch=master --commit-d
 npx wrangler pages deploy site --project-name=jungjee --branch=preview --commit-dirty=true
 ```
 
-A failed git build does not replace the last successful direct-upload deployment, so the live site is safe from accidental master pushes — but do not rely on git push-to-deploy; it does not work here. (Follow-up option: disable the project's git auto-builds or set build output dir = `site`, then push-to-deploy could work.)
+**Push-to-deploy IS enabled** (as of 2026-07-26). The project is git-connected (production branch `master`); pushing to `master` triggers a Cloudflare build that publishes `site/`. Getting there required setting, in the Pages dashboard → Build configuration: **Framework preset = None**, **Build command = empty**, **Build output directory = `site`**. The project had been auto-detected as **Jekyll**, whose `jekyll build` command runs on every push and fails (a non-ASCII char in the `jekyll-theme-primer` Sass), which produced empty/failed deployments. **Never re-add a build command or re-select the Jekyll preset** — it will break deploys again. Normal way to ship now: edit `site/index.html`, `git push origin HEAD:master`. The `wrangler pages deploy` above still works as a manual fallback.
+
+A scheduled **cloud routine** (`trig_01DFJwjGbjTQ3iFHXsQHnfGN`, Mondays 16:00 UTC ≈ 9am PT) refreshes the metrics-band numbers (Publications / Citations / h-index / i10-index) from Google Scholar + the CV header and pushes to `master`, which auto-deploys. Manage/logs at `https://claude.ai/code/routines`. The prompt lives in the routine config (not the repo).
 
 Custom-domain / DNS changes are done in the Cloudflare dashboard (this wrangler version has no `pages domain` command): `https://dash.cloudflare.com/41eba909656c2056cbc8a20d29026061/pages/view/jungjee/domains`. **Rollback:** remove the custom domain there, or re-point DNS to `jungjee.github.io` (the legacy Jekyll site is untouched on `master`).
 
@@ -54,7 +56,8 @@ Open `site/index.html` directly, or render it headless. Note two macOS quirks:
 
 ## Repo gotchas
 
-- **npm registry:** the global `~/.npmrc` points npm at Apple's internal registry (`npm.apple.com`), which is unreachable off-VPN and breaks `npx wrangler`. This repo pins the public registry via `.npmrc` (`registry=https://registry.npmjs.org/`) — keep it.
-- **Commit signing:** `git commit` fails with `ac-sign: No such file or directory` (missing Apple signing tool). Commit with `git commit --no-gpg-sign`.
+- **npm registry:** Apple's internal registry (`npm.apple.com`) was configured and broke `npx wrangler` off-VPN. Both the global `~/.npmrc` and this repo's `.npmrc` now point at the public registry (`registry=https://registry.npmjs.org/`) — keep the repo one.
+- **Commit signing:** the global gitconfig previously forced Apple `ac-sign` (x509) signing, which failed every commit; it has been removed, so `git commit` works normally now. (If it ever resurfaces elsewhere: `git commit --no-gpg-sign`.)
+- **Git identity / GitHub auth:** this personal Mac was de-Appled — git identity is `Jee-weon Jung <jeeweonj@ieee.org>`, `gh` is logged into public `github.com` (account `Jungjee`) only. Remote is `https://github.com/Jungjee/Jungjee.github.io`.
 - **Commit style (user preference):** commit after each logical unit; `<type>: <summary>` first line with a detailed body naming files/keys; end the body with `Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>`; add a sequential lightweight tag (`vN-...`) after each commit for easy rollback.
 - Untracked build artifacts from a prior Next.js experiment may be present (`.next/`, `out/`, `node_modules/`, `next-env.d.ts`, `ref-karpathy-style.css`) — ignore; they are not part of either live site.
