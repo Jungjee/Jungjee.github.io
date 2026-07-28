@@ -4,12 +4,16 @@ name: Weekly metrics refresh
 # (Publications / Citations / h-index / i10-index) and pushes to master,
 # which Cloudflare Pages auto-deploys.
 #
-# Citations / h-index / i10-index come from Google Scholar.
-# Publications comes from the CV header ("N publications, including ...").
+# Citations / h-index / i10-index come from Google Scholar (fetched through a
+# fallback chain — Scholar serves a stub to datacenter IPs like this runner's);
+# Publications comes from the CV header. See .github/scripts/update_metrics.py.
 #
-# Runs entirely on GitHub's infrastructure: no local machine, no Claude
-# session, and GITHUB_TOKEN already has write access to this repo
-# (the cloud-routine approach failed with HTTP 403 on git-receive-pack).
+# Runs entirely on GitHub's infrastructure: no local machine and no Claude
+# session needed, and GITHUB_TOKEN already carries contents:write (the previous
+# cloud-routine approach failed with HTTP 403 on git-receive-pack).
+#
+# If every Scholar source is blocked the run FAILS on purpose, so GitHub emails
+# the repo owner instead of silently skipping a week.
 
 on:
   schedule:
@@ -28,29 +32,16 @@ jobs:
   refresh:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           ref: master
 
       - name: Install poppler (pdftotext)
         run: sudo apt-get update -qq && sudo apt-get install -y -qq poppler-utils
 
-      - name: Fetch Google Scholar profile
-        run: |
-          curl -sSL --compressed \
-            -A 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36' \
-            -H 'Accept-Language: en-US,en;q=0.9' \
-            'https://scholar.google.com/citations?user=A5OcLdAAAAAJ&hl=en' \
-            -o scholar.html
-          echo "bytes: $(wc -c < scholar.html)"
-          if grep -qiE 'not a robot|unusual traffic|/sorry/' scholar.html; then
-            echo "::error::Google Scholar served a bot check, not the profile."
-            exit 1
-          fi
-
-      - name: Update metrics in site/index.html
+      - name: Refresh metrics in site/index.html
         id: update
-        run: python3 .github/scripts/update_metrics.py scholar.html
+        run: python3 .github/scripts/update_metrics.py
 
       - name: Commit and push
         if: steps.update.outputs.changed == 'true' && inputs.dry_run != true
