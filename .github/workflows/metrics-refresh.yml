@@ -1,0 +1,66 @@
+name: Weekly metrics refresh
+
+# Refreshes the four numbers in the metrics band of site/index.html
+# (Publications / Citations / h-index / i10-index) and pushes to master,
+# which Cloudflare Pages auto-deploys.
+#
+# Citations / h-index / i10-index come from Google Scholar.
+# Publications comes from the CV header ("N publications, including ...").
+#
+# Runs entirely on GitHub's infrastructure: no local machine, no Claude
+# session, and GITHUB_TOKEN already has write access to this repo
+# (the cloud-routine approach failed with HTTP 403 on git-receive-pack).
+
+on:
+  schedule:
+    - cron: '7 16 * * 1'   # Mondays 16:07 UTC ≈ 9:07am PT
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Parse and report only; do not commit'
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: master
+
+      - name: Install poppler (pdftotext)
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq poppler-utils
+
+      - name: Fetch Google Scholar profile
+        run: |
+          curl -sSL --compressed \
+            -A 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36' \
+            -H 'Accept-Language: en-US,en;q=0.9' \
+            'https://scholar.google.com/citations?user=A5OcLdAAAAAJ&hl=en' \
+            -o scholar.html
+          echo "bytes: $(wc -c < scholar.html)"
+          if grep -qiE 'not a robot|unusual traffic|/sorry/' scholar.html; then
+            echo "::error::Google Scholar served a bot check, not the profile."
+            exit 1
+          fi
+
+      - name: Update metrics in site/index.html
+        id: update
+        run: python3 .github/scripts/update_metrics.py scholar.html
+
+      - name: Commit and push
+        if: steps.update.outputs.changed == 'true' && inputs.dry_run != true
+        env:
+          SUMMARY: ${{ steps.update.outputs.summary }}
+        run: |
+          git config user.name  'Jee-weon Jung'
+          git config user.email 'jeeweonj@ieee.org'
+          git add site/index.html
+          git commit -m 'chore: weekly metrics refresh' \
+                     -m "$SUMMARY" \
+                     -m 'Automated by .github/workflows/metrics-refresh.yml'
+          git push origin HEAD:master
