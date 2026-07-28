@@ -18,6 +18,7 @@ name: Weekly metrics refresh
 on:
   schedule:
     - cron: '7 16 * * 1'   # Mondays 16:07 UTC ≈ 9:07am PT
+    - cron: '7 16 * * 4'   # Thursday retry, in case Monday was fully blocked
   workflow_dispatch:
     inputs:
       dry_run:
@@ -31,6 +32,7 @@ permissions:
 jobs:
   refresh:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v5
         with:

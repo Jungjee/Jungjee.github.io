@@ -27,6 +27,7 @@ import os
 import re
 import subprocess
 import sys
+import time
 import urllib.parse
 import urllib.request
 from pathlib import Path
@@ -37,12 +38,24 @@ CV = ROOT / "CV_Jee-weon_Jung.pdf"
 
 SCHOLAR_URL = "https://scholar.google.com/citations?user=A5OcLdAAAAAJ&hl=en"
 
-# Tried in order; the first one whose HTML parses wins.
+
+def _proxied(template):
+    return template.format(url=urllib.parse.quote(SCHOLAR_URL, safe=""))
+
+
+# Tried in order, then the whole list is retried; first parseable page wins.
+# Scholar's datacenter block is intermittent — a direct fetch from an Actions
+# runner has both succeeded and 403'd minutes apart — so retrying is the main
+# lever. The proxies are best-effort: AllOrigins has returned the real page but
+# also 522'd, and codetabs is included only as another roll of the dice.
 SOURCES = [
     ("direct", SCHOLAR_URL),
-    ("allorigins", "https://api.allorigins.win/raw?url="
-                   + urllib.parse.quote(SCHOLAR_URL, safe="")),
+    ("allorigins", _proxied("https://api.allorigins.win/raw?url={url}")),
+    ("codetabs", _proxied("https://api.codetabs.com/v1/proxy?quest={url}")),
 ]
+
+ROUNDS = 5           # passes over SOURCES
+ROUND_SLEEP = 45     # seconds between passes (~3 min worst case)
 
 UA = ("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 "
       "(KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36")
@@ -89,19 +102,23 @@ def scholar_metrics(saved=None):
             fail(f"{saved}: no stats table found")
         return stats
 
-    for name, url in SOURCES:
-        try:
-            html = fetch(url)
-        except Exception as exc:                    # noqa: BLE001 - report and try next
-            print(f"source {name}: fetch failed ({exc})")
-            continue
-        stats = parse_stats(html)
-        if stats:
-            print(f"source {name}: ok ({len(html)} bytes) -> {stats}")
-            return stats
-        print(f"source {name}: no stats table ({len(html)} bytes, likely a bot check)")
+    for attempt in range(1, ROUNDS + 1):
+        for name, url in SOURCES:
+            try:
+                html = fetch(url)
+            except Exception as exc:                # noqa: BLE001 - report and try next
+                print(f"round {attempt} {name}: fetch failed ({exc})")
+                continue
+            stats = parse_stats(html)
+            if stats:
+                print(f"round {attempt} {name}: ok ({len(html)} bytes) -> {stats}")
+                return stats
+            print(f"round {attempt} {name}: no stats table "
+                  f"({len(html)} bytes, likely a bot check)")
+        if attempt < ROUNDS:
+            time.sleep(ROUND_SLEEP)
 
-    fail("every Scholar source failed or returned a bot check; nothing written")
+    fail(f"every Scholar source failed across {ROUNDS} rounds; nothing written")
 
 
 def cv_publications():
