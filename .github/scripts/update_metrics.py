@@ -54,8 +54,17 @@ SOURCES = [
     ("codetabs", _proxied("https://api.codetabs.com/v1/proxy?quest={url}")),
 ]
 
-ROUNDS = 5           # passes over SOURCES
-ROUND_SLEEP = 45     # seconds between passes (~3 min worst case)
+ROUNDS = 2           # passes over SOURCES; see note below
+ROUND_SLEEP = 20     # seconds between passes
+
+# Why so few rounds: a runner keeps ONE outbound IP for the whole job, so if
+# Scholar 403s the first request it will 403 every retry in that job (run
+# 30567292201: 5 rounds x 3 sources, all blocked, 6m38s wasted). Retrying is
+# only useful ACROSS runs, which get fresh IPs — hence the daily schedule and
+# the EXIT_BLOCKED contract below. The two rounds here only cover a momentary
+# proxy blip.
+
+EXIT_BLOCKED = 2     # every source refused; caller decides whether that's fatal
 
 UA = ("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 "
       "(KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36")
@@ -118,7 +127,11 @@ def scholar_metrics(saved=None):
         if attempt < ROUNDS:
             time.sleep(ROUND_SLEEP)
 
-    fail(f"every Scholar source failed across {ROUNDS} rounds; nothing written")
+    # Not an error: this runner's IP is blocked today. Exit distinctly so the
+    # workflow can treat it as "try again tomorrow" instead of emailing.
+    print("::notice::every Scholar source refused this runner; skipping "
+          "(a later run gets a different IP)")
+    sys.exit(EXIT_BLOCKED)
 
 
 def cv_publications():
