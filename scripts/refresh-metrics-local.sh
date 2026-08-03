@@ -27,7 +27,14 @@ export PATH="/opt/homebrew/bin:/usr/bin:/bin:/usr/sbin:/sbin"
 
 log() { echo "[$(date -u +%Y-%m-%dT%H:%M:%SZ)] $*"; }
 
-cd "$REPO" || { log "FATAL: $REPO not found — see scripts/README-metrics-timer.md"; exit 1; }
+# A silent background job that breaks is worse than no job: surface real
+# failures (not routine skips) where they'll actually be seen.
+notify() {
+  osascript -e "display notification \"$1\" with title \"jungjee.com metrics\"" >/dev/null 2>&1 || true
+}
+die() { log "ERROR: $1"; notify "$1"; exit 1; }
+
+cd "$REPO" || die "$REPO not found — see the metrics timer notes in CLAUDE.md"
 
 if ! git fetch -q origin master 2>/dev/null; then
   log "SKIP: cannot reach origin (offline?)."
@@ -35,7 +42,7 @@ if ! git fetch -q origin master 2>/dev/null; then
 fi
 
 # The clone holds nothing worth preserving: every value is re-derived each run.
-git reset -q --hard origin/master || { log "ERROR: reset failed."; exit 1; }
+git reset -q --hard origin/master || die "git reset failed in $REPO"
 
 OUT=$(python3 .github/scripts/update_metrics.py 2>&1)
 CODE=$?
@@ -44,7 +51,7 @@ log "$OUT"
 case "$CODE" in
   0) ;;                                     # parsed fine
   2) log "SKIP: Scholar refused this machine too (unusual — check network)."; exit 0 ;;
-  *) log "ERROR: update_metrics.py exited $CODE — leaving the file alone."; exit 1 ;;
+  *) die "update_metrics.py exited $CODE; metrics band left untouched" ;;
 esac
 
 if [ -z "$(git status --porcelain site/index.html)" ]; then
@@ -62,6 +69,5 @@ git -c user.name='Jee-weon Jung' -c user.email='jeeweonj@ieee.org' \
 if git push -q origin HEAD:master; then
   log "PUSHED: $SUMMARY"
 else
-  log "ERROR: push failed; next run will re-derive and retry."
-  exit 1
+  die "push to master failed; next run will re-derive and retry"
 fi

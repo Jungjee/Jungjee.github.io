@@ -1,5 +1,15 @@
 name: Weekly metrics refresh
 
+# BACKUP PATH ONLY — the real refresh runs on Jee-weon's Mac via launchd
+# (scripts/refresh-metrics-local.sh). Google Scholar refuses GitHub's
+# datacenter IPs on nearly every run, so this workflow usually skips; it is
+# kept because on the rare day it does get through, it costs nothing and keeps
+# the numbers current while the Mac is off.
+#
+# IMPORTANT: a green run here does NOT mean the numbers were updated. A blocked
+# fetch exits 0 on purpose (see the notes on the escalation step below), so
+# check the run summary, not the checkmark.
+
 # Refreshes the four numbers in the metrics band of site/index.html
 # (Publications / Citations / h-index / i10-index) and pushes to master,
 # which Cloudflare Pages auto-deploys.
@@ -73,16 +83,23 @@ jobs:
                      -m 'Automated by .github/workflows/metrics-refresh.yml'
           git push origin HEAD:master
 
-      - name: Escalate a block once a week
-        # Blocked runs are normal and silent, or you'd get mail most days for
-        # something that fixes itself. But silence must not hide a permanent
-        # break, so on Mondays a block is treated as a failure — at most one
-        # email a week, and no state to keep anywhere. If Monday is blocked but
-        # Tuesday gets through, the only cost is one false alarm.
-        if: steps.update.outputs.blocked == 'true' && inputs.dry_run != true
+      - name: Say plainly what happened
+        # A green check on a run that did nothing is how the site sat at 5,044
+        # for three days while Scholar said 5,096. Write the outcome into the
+        # run summary so the truth is visible without opening the log.
+        if: always()
         run: |
-          if [ "$(date -u +%u)" = "1" ]; then
-            echo "::error::Scholar has refused this runner and it is Monday — if the last few days also failed, the metrics band is going stale. Check recent runs."
-            exit 1
+          if [ "${{ steps.update.outputs.blocked }}" = "true" ]; then
+            echo "### ⏭️ SKIPPED — Google Scholar refused this runner's IP" >> "$GITHUB_STEP_SUMMARY"
+            echo "" >> "$GITHUB_STEP_SUMMARY"
+            echo "**The numbers were not updated.** This is expected here; the Mac launchd timer is the primary path." >> "$GITHUB_STEP_SUMMARY"
+          elif [ "${{ steps.update.outputs.changed }}" = "true" ]; then
+            echo "### ✅ UPDATED — ${{ steps.update.outputs.summary }}" >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "### ✅ Reached Scholar; numbers already current" >> "$GITHUB_STEP_SUMMARY"
           fi
-          echo "Blocked today; a later run gets a different IP. Not escalating (not Monday)."
+
+      # No Monday escalation any more: this path is expected to be blocked most
+      # days, so failing weekly would be pure noise. The Mac timer is the
+      # mechanism that must work, and it reports its own failures via a macOS
+      # notification (scripts/refresh-metrics-local.sh).
